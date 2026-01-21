@@ -20,3 +20,6 @@ export { registerChartTools } from './chart.js';
 export { registerDiagramTools } from './diagram.js';
 export { registerQRCodeTools } from './qrcode.js';
 export { registerWatermarkTools } from './watermark.js';
+
+// 이미지 트레이싱
+export { registerTraceTools } from './trace.js';

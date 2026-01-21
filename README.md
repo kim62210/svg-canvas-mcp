@@ -23,6 +23,7 @@ Claude Code에서 포토샵 수준의 SVG 그래픽을 생성할 수 있는 MCP(
   - 2D/3D 다이어그램 (flowchart, mindmap, sequence, isometric)
   - QR 코드 생성 (순수 SVG 기반)
   - 워터마크 오버레이
+- **이미지 트레이싱**: 비트맵 이미지를 벡터 패스로 변환 (potrace 기반)
 
 ## 설치
 
@@ -40,6 +41,7 @@ npm install
 | `svg-path-commander` | ^2.0.8 | SVG 패스 조작 |
 | `uuid` | ^10.0.0 | 고유 ID 생성 |
 | `zod` | ^3.23.0 | 스키마 검증 |
+| `potrace` | ^2.1.8 | 이미지 트레이싱 (비트맵→벡터) |
 
 ### 빌드
 
@@ -271,6 +273,14 @@ SVG 캔버스 MCP를 사용해서 1200x630 크기의 썸네일을 만들어줘
 | `watermark_diagonal` | 대각선 반복 워터마크 |
 | `watermark_remove` | 워터마크 제거 |
 
+### 이미지 트레이싱
+| 도구 | 설명 |
+|------|------|
+| `trace_image` | 이미지를 벡터 패스로 변환 (흑백) |
+| `trace_color` | 컬러 이미지를 다색 벡터로 변환 |
+| `trace_outline` | 외곽선만 추출 |
+| `trace_silhouette` | 실루엣(단색 형태) 추출 |
+
 ## 프로젝트 구조
 
 ```
@@ -300,7 +310,8 @@ svg-canvas-mcp/
 │   │   ├── chart.ts      # 2D/3D 차트
 │   │   ├── diagram.ts    # 2D/3D 다이어그램
 │   │   ├── qrcode.ts     # QR 코드
-│   │   └── watermark.ts  # 워터마크
+│   │   ├── watermark.ts  # 워터마크
+│   │   └── trace.ts      # 이미지 트레이싱
 │   ├── types/            # TypeScript 타입
 │   └── utils/            # 유틸리티
 │       ├── color-utils.ts

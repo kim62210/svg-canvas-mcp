@@ -26,6 +26,9 @@ import { registerDiagramTools } from './tools/diagram.js';
 import { registerQRCodeTools } from './tools/qrcode.js';
 import { registerWatermarkTools } from './tools/watermark.js';
 
+// 이미지 트레이싱
+import { registerTraceTools } from './tools/trace.js';
+
 /**
  * MCP 서버 생성 및 초기화
  */
@@ -55,6 +58,9 @@ export function createServer(): McpServer {
   registerDiagramTools(server);
   registerQRCodeTools(server);
   registerWatermarkTools(server);
+
+  // 이미지 트레이싱 등록
+  registerTraceTools(server);
 
   return server;
 }
