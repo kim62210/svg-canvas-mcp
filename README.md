@@ -17,6 +17,12 @@ Claude Code에서 포토샵 수준의 SVG 그래픽을 생성할 수 있는 MCP(
 - **히스토리**: Undo/Redo 지원
 - **내보내기**: SVG, PNG, Data URI
 - **AI 기능**: 색상 팔레트 추천, 색상 분석, 객체 정렬 제안, 레이아웃 추천
+- **블로그 운영 기능**:
+  - OG 이미지 프리셋 (10개 플랫폼, 6개 테마)
+  - 2D/3D 차트 생성 (bar, line, pie, donut, pyramid)
+  - 2D/3D 다이어그램 (flowchart, mindmap, sequence, isometric)
+  - QR 코드 생성 (순수 SVG 기반)
+  - 워터마크 오버레이
 
 ## 설치
 
@@ -219,6 +225,52 @@ SVG 캔버스 MCP를 사용해서 1200x630 크기의 썸네일을 만들어줘
 | `ai_align_objects` | 객체 정렬 제안 |
 | `ai_suggest_layout` | 레이아웃 추천 |
 
+### OG 이미지 프리셋
+| 도구 | 설명 |
+|------|------|
+| `preset_list` | 사용 가능한 플랫폼/테마 목록 |
+| `preset_create_og` | 플랫폼별 OG 이미지 생성 |
+| `preset_create_thumbnail` | 간편 썸네일 생성 |
+
+**지원 플랫폼**: og, naver_blog, naver_search, twitter, youtube, instagram, instagram_story, tistory, pinterest, linkedin
+
+**지원 테마**: modern, dark, gradient_blue, gradient_sunset, minimal, nature
+
+### 차트
+| 도구 | 설명 |
+|------|------|
+| `chart_bar` | 막대 차트 |
+| `chart_line` | 선 차트 |
+| `chart_pie` | 파이 차트 |
+| `chart_donut` | 도넛 차트 |
+| `chart_3d_bar` | 3D 막대 차트 |
+| `chart_3d_pie` | 3D 파이 차트 |
+| `chart_3d_pyramid` | 3D 피라미드 차트 |
+
+### 다이어그램
+| 도구 | 설명 |
+|------|------|
+| `diagram_flowchart` | 플로우차트 |
+| `diagram_mindmap` | 마인드맵 |
+| `diagram_sequence` | 시퀀스 다이어그램 |
+| `diagram_isometric` | 아이소메트릭 블록 다이어그램 |
+| `diagram_3d_architecture` | 3D 인프라 아키텍처 |
+
+### QR 코드
+| 도구 | 설명 |
+|------|------|
+| `qrcode_generate` | QR 코드 생성 |
+| `qrcode_batch` | 다량 QR 코드 생성 |
+
+### 워터마크
+| 도구 | 설명 |
+|------|------|
+| `watermark_text` | 텍스트 워터마크 |
+| `watermark_image` | 이미지 워터마크 |
+| `watermark_copyright` | 저작권 표시 |
+| `watermark_diagonal` | 대각선 반복 워터마크 |
+| `watermark_remove` | 워터마크 제거 |
+
 ## 프로젝트 구조
 
 ```
@@ -243,7 +295,12 @@ svg-canvas-mcp/
 │   │   ├── symbol.ts     # 심볼
 │   │   ├── history.ts    # 히스토리
 │   │   ├── export.ts     # 내보내기
-│   │   └── ai.ts         # AI 기능
+│   │   ├── ai.ts         # AI 기능
+│   │   ├── preset.ts     # OG 이미지 프리셋
+│   │   ├── chart.ts      # 2D/3D 차트
+│   │   ├── diagram.ts    # 2D/3D 다이어그램
+│   │   ├── qrcode.ts     # QR 코드
+│   │   └── watermark.ts  # 워터마크
 │   ├── types/            # TypeScript 타입
 │   └── utils/            # 유틸리티
 │       ├── color-utils.ts
