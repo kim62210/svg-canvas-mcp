@@ -19,6 +19,13 @@ import { registerHistoryTools } from './tools/history.js';
 import { registerExportTools } from './tools/export.js';
 import { registerAITools } from './tools/ai.js';
 
+// 블로그 운영 필수 기능
+import { registerPresetTools } from './tools/preset.js';
+import { registerChartTools } from './tools/chart.js';
+import { registerDiagramTools } from './tools/diagram.js';
+import { registerQRCodeTools } from './tools/qrcode.js';
+import { registerWatermarkTools } from './tools/watermark.js';
+
 /**
  * MCP 서버 생성 및 초기화
  */
@@ -41,6 +48,13 @@ export function createServer(): McpServer {
   registerHistoryTools(server);
   registerExportTools(server);
   registerAITools(server);
+
+  // 블로그 운영 필수 기능 등록
+  registerPresetTools(server);
+  registerChartTools(server);
+  registerDiagramTools(server);
+  registerQRCodeTools(server);
+  registerWatermarkTools(server);
 
   return server;
 }

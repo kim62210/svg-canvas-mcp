@@ -198,7 +198,30 @@ export class SVGDocumentManager {
    * SVG 코드 내보내기
    */
   exportSVG(options: { minify?: boolean; pretty?: boolean } = {}): string {
-    const svg = documentToSVG(this.document, options.pretty !== false);
+    let svg = documentToSVG(this.document, options.pretty !== false);
+
+    // rawDefs 삽입 (있는 경우)
+    if (this.rawDefs.length > 0) {
+      const rawDefsContent = this.rawDefs.join('\n');
+      // 기존 defs가 있으면 그 안에 추가, 없으면 새로 생성
+      if (svg.includes('</defs>')) {
+        svg = svg.replace('</defs>', `${rawDefsContent}\n  </defs>`);
+      } else {
+        // defs가 없으면 svg 태그 바로 다음에 추가
+        svg = svg.replace(
+          /(<svg[^>]*>)/,
+          `$1\n  <defs>\n${rawDefsContent}\n  </defs>`
+        );
+      }
+    }
+
+    // rawElements 삽입 (있는 경우)
+    if (this.rawElements.length > 0) {
+      const rawElementsContent = this.rawElements.join('\n');
+      // </svg> 바로 앞에 추가
+      svg = svg.replace('</svg>', `${rawElementsContent}\n</svg>`);
+    }
+
     return options.minify ? minifySVG(svg) : svg;
   }
 
@@ -458,6 +481,80 @@ export class SVGDocumentManager {
     return clipPath.id;
   }
 
+  // ============ Raw Content 관리 ============
+
+  // Raw defs 저장소 (문자열 형태의 defs)
+  private rawDefs: string[] = [];
+
+  // Raw elements 저장소 (문자열 형태의 elements)
+  private rawElements: string[] = [];
+
+  /**
+   * Raw SVG defs 추가 (그라디언트, 필터, 마커 등의 문자열)
+   */
+  addDefs(content: string): void {
+    // 중복 방지 (ID 기반)
+    const idMatch = content.match(/id="([^"]+)"/);
+    if (idMatch) {
+      const id = idMatch[1];
+      this.rawDefs = this.rawDefs.filter(d => !d.includes(`id="${id}"`));
+    }
+    this.rawDefs.push(content);
+    this.isDirty = true;
+    this.emit({ type: 'defs-changed' });
+  }
+
+  /**
+   * Raw defs 제거
+   */
+  removeDefs(idOrPattern: string): boolean {
+    const before = this.rawDefs.length;
+    this.rawDefs = this.rawDefs.filter(d => !d.includes(`id="${idOrPattern}"`));
+    if (this.rawDefs.length !== before) {
+      this.isDirty = true;
+      this.emit({ type: 'defs-changed' });
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Raw SVG 요소 추가 (문자열 형태)
+   */
+  addRawElement(content: string): void {
+    this.rawElements.push(content);
+    this.isDirty = true;
+    this.emit({ type: 'element-added' });
+  }
+
+  /**
+   * Raw defs 조회
+   */
+  getRawDefs(): string[] {
+    return [...this.rawDefs];
+  }
+
+  /**
+   * Raw elements 조회
+   */
+  getRawElements(): string[] {
+    return [...this.rawElements];
+  }
+
+  /**
+   * 너비 getter
+   */
+  get width(): number {
+    return this.document.config.width;
+  }
+
+  /**
+   * 높이 getter
+   */
+  get height(): number {
+    return this.document.config.height;
+  }
+
   // ============ 이벤트 관리 ============
 
   /**
@@ -549,4 +646,14 @@ export function setCurrentDocument(doc: SVGDocumentManager): void {
  */
 export function resetCurrentDocument(): void {
   currentDocument = null;
+}
+
+/**
+ * 새 문서 생성 (편의 함수)
+ * 기존 문서를 초기화하고 새 캔버스를 생성합니다.
+ */
+export function createDocument(width: number, height: number, background?: string): SVGDocumentManager {
+  const doc = getCurrentDocument();
+  doc.create(width, height, { background });
+  return doc;
 }
